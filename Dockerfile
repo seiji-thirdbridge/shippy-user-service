@@ -5,10 +5,11 @@ WORKDIR /go/src/github.com/seiji-thirdbridge/shippy-user-service
 
 COPY . .
 
-RUN go get -u github.com/golang/dep/cmd/dep
-RUN dep init && dep ensure
+# RUN go get -u github.com/golang/dep/cmd/dep
+RUN go get
+# RUN dep init && dep ensure
 
-RUN CGO_ENABLED=0 GOOS=linux go build -o user-service -a -installsuffix cgo main.go repository.go handler.go database.go token_service.go
+RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo .
 
 FROM alpine:latest
 
@@ -19,4 +20,4 @@ WORKDIR /app
 
 COPY --from=builder /go/src/github.com/seiji-thirdbridge/shippy-user-service/user-service .
 
-CMD ["./user-service"]
+CMD ["./shippy-user-service"]
